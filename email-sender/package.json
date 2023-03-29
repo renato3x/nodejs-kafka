@@ -1,0 +1,17 @@
+{
+  "name": "email-sender",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "nodemon src/index"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "dotenv": "^16.0.3",
+    "kafkajs": "^2.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

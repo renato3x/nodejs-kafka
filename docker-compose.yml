@@ -9,7 +9,7 @@ services:
       - 27017:27017
 
   zookeeper:
-    image: bitnami/zookeeper:3
+    image: bitnami/zookeeper:latest
     ports:
       - 2181:2181
     environment:
@@ -18,7 +18,7 @@ services:
       - zookeeper_data:/bitnami
 
   kafka:
-    image: bitnami/kafka:2
+    image: bitnami/kafka:latest
     ports:
       - 9092:9092
     environment:
