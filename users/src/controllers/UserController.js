@@ -25,6 +25,14 @@ class UserController {
 
     return response.status(HttpStatus.CREATED).json(user)
   }
+
+  static async deleteById(request, response) {
+    const { id } = request.params
+
+    await UserService.deleteById(id)
+
+    return response.status(HttpStatus.OK).json({ ok: true })
+  }
 }
 
 module.exports = { UserController }

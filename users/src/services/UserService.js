@@ -12,6 +12,10 @@ class UserService {
 
     return user
   }
+
+  static async deleteById(id) {
+    await User.findOneAndDelete({ _id: id })
+  }
 }
 
 module.exports = { UserService }

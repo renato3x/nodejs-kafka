@@ -25,7 +25,8 @@ async function main() {
       await EmailSenderService.sendEmailVerification(user.username, user.email)
 
       console.log(log('Envio de email', 'Feito com sucesso!'))
-    }
+    },
+    
   })
 }
 

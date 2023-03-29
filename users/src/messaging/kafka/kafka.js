@@ -2,7 +2,7 @@ const { Kafka } = require('kafkajs')
 
 const kafka = new Kafka({
   clientId: 'users-app',
-  brokers: ['172.24.0.4:9092']
+  brokers: [process.env.KAFKA_BROKER]
 })
 
 module.exports = { kafka }

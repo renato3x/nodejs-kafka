@@ -1,0 +1,12 @@
+{
+  "host": "smtp.gmail.com",
+  "port": 587,
+  "secure": false,
+  "auth": {
+    "user": "pereirarenato21@gmail.com",
+    "pass": " bfhflcmnqacrdaay"
+  },
+  "tls": {
+    "rejectUnauthorized": true
+  }
+}
