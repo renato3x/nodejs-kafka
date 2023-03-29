@@ -1,5 +1,6 @@
 const { UserService } = require('../services/UserService')
 const { HttpStatus } = require('../enums/HttpStatus')
+const { producer } = require('../messaging/kafka/producer')
 
 class UserController {
   static async index(request, response) {
@@ -12,6 +13,15 @@ class UserController {
     const { body } = request
 
     const user = await UserService.create(body)
+
+    await producer.send({
+      topic: 'user.new',
+      messages: [
+        {
+          value: JSON.stringify({ email: user.email, username: user.username })
+        }
+      ]
+    })
 
     return response.status(HttpStatus.CREATED).json(user)
   }

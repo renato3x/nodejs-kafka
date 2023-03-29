@@ -4,6 +4,7 @@ require('./database/connection')
 const { router } = require('./routes')
 const { ErrorHandler } = require('./middlewares/ErrorHandler')
 const express = require('express')
+
 const app = express()
 
 app.use(express.json())
