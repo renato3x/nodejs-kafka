@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const { kafka } = require('./messaging/kafka/kafka')
+const { EmailSenderService } = require('./services/email-sender')
 const chalk = require('chalk')
 
 async function main() {
@@ -20,6 +21,10 @@ async function main() {
       const user = JSON.parse(userJSON)
 
       log('Send New Email', `send email from ${user.email}`)
+
+      await EmailSenderService.sendEmailVerification(user.username, user.email)
+
+      console.log(log('Envio de email', 'Feito com sucesso!'))
     }
   })
 }
