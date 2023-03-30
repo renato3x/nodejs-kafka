@@ -7,6 +7,8 @@ services:
       - mongodb_data:/data/db
     ports:
       - 27017:27017
+    networks:
+      - app
 
   zookeeper:
     image: bitnami/zookeeper:latest
@@ -16,6 +18,8 @@ services:
       ALLOW_ANONYMOUS_LOGIN: yes
     volumes:
       - zookeeper_data:/bitnami
+    networks:
+      - app
 
   kafka:
     image: bitnami/kafka:latest
@@ -30,6 +34,12 @@ services:
       - zookeeper
     volumes:
       - kafka_data:/bitnami
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
 
 volumes:
   zookeeper_data:
