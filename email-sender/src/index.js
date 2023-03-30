@@ -27,8 +27,7 @@ async function main() {
 }
 
 function log(prefix, ...message) {
-  const formattedPrefix = chalk.blue(`[${prefix}]`)
-  console.log(`${formattedPrefix}`, ...message)
+  console.log(`${chalk.blue(`[${prefix}]`)}`, ...message)
 }
 
 main().then(() => {
