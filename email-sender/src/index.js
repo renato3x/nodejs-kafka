@@ -1,10 +1,11 @@
 require('dotenv').config()
+require('./database/connection')
 
 const { kafka } = require('./messaging/kafka/kafka')
-const { faker } = require('@faker-js/faker')
-const chalk = require('chalk')
+const { log } = require('./utils')
+const { EmailService } = require('./services/email')
 
-async function main() {
+const main = async() => {
   const consumer = kafka.consumer({ groupId: 'email-group', allowAutoTopicCreation: true, readUncommitted: true })
 
   await consumer.connect()
@@ -22,32 +23,11 @@ async function main() {
       
       log('INFO', `Send email from ${user.email}`)
 
-      await asyncTimeout(() => {
-        if (faker.random.numeric(2) % 2 === 0) {
-          throw new Error('Erro ao enviar email')
-        }
+      const email = await EmailService.create(user)
 
-        log('INFO', 'Sent with success!')
-      }, 3000)
+      log('INFO', 'Email was sended and recorded on database', email)
     }
   })
-}
-
-function asyncTimeout(fn, ms = 1000) {
-  return new Promise((resolve, reject) => {
-    const id = setTimeout(() => {
-      try {
-        fn()
-        resolve(id)
-      } catch (error) {
-        reject(error)
-      }
-    }, ms)
-  })
-}
-
-function log(prefix, ...message) {
-  console.log(`${chalk.blue(`[${prefix}]`)}`, ...message)
 }
 
 main().then(() => {
