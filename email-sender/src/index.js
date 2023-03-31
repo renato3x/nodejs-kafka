@@ -4,13 +4,19 @@ const { kafka } = require('./messaging/kafka/kafka')
 const chalk = require('chalk')
 
 async function main() {
-  const consumer = kafka.consumer({ groupId: 'email-group', allowAutoTopicCreation: true })
+  const consumer = kafka.consumer({
+    groupId: 'email-group',
+    allowAutoTopicCreation: true,
+    readUncommitted: true
+  })
 
   await consumer.connect()
-  await consumer.subscribe({ topic: 'user.new' })
+  await consumer.subscribe({ topic: 'user.new', fromBeginning: true })
 
   await consumer.run({
     eachMessage: async ({ message }) => {
+      console.log(message.timestamp)
+
       const userJSON = message.value.toString()
 
       if (!userJSON) {
@@ -18,11 +24,26 @@ async function main() {
       }
 
       const user = JSON.parse(userJSON)
+      
+      log('Send New Email', `Send email from ${user.email}`)
 
-      log('Send New Email', `send email from ${user.email}`)
-      log('Send New Email', 'Feito com sucesso!')
-    },
-    
+      await asyncTimeout(() => {
+        log('Send New Email', 'Enviado com sucesso!')
+      }, 3000)
+    }
+  })
+}
+
+function asyncTimeout(fn, ms = 1000) {
+  return new Promise((resolve, reject) => {
+    const id = setTimeout(() => {
+      try {
+        fn()
+        resolve(id)
+      } catch (error) {
+        reject(error)
+      }
+    }, ms)
   })
 }
 
