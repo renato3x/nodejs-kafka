@@ -11,7 +11,7 @@ async function main() {
   await consumer.subscribe({ topic: 'user.new', fromBeginning: true })
 
   await consumer.run({
-    eachMessage: async ({ message, topic }) => {
+    eachMessage: async ({ message }) => {
       const userJSON = message.value.toString()
 
       if (!userJSON) {
@@ -27,7 +27,7 @@ async function main() {
           throw new Error('Erro ao enviar email')
         }
 
-        log('INFO', 'Enviado com sucesso!')
+        log('INFO', 'Sent with success!')
       }, 3000)
     }
   })
