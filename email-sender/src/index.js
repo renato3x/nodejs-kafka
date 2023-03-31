@@ -7,8 +7,14 @@ const { EmailService } = require('./services/email')
 const { Partitioners } = require('kafkajs')
 
 const main = async() => {
-  const consumer = kafka.consumer({
+  const newUserConsumer = kafka.consumer({
     groupId: 'email-group',
+    allowAutoTopicCreation: true,
+    readUncommitted: true
+  })
+
+  const newUserDLTConsumer = kafka.consumer({
+    groupId: 'email-group-dlt',
     allowAutoTopicCreation: true,
     readUncommitted: true
   })
@@ -18,12 +24,15 @@ const main = async() => {
     createPartitioner: Partitioners.DefaultPartitioner
   })
 
-  await consumer.connect()
-  await consumer.subscribe({ topic: 'user.new', fromBeginning: true })
+  await newUserConsumer.connect()
+  await newUserConsumer.subscribe({ topic: 'user.new', fromBeginning: true })
+
+  await newUserDLTConsumer.connect()
+  await newUserDLTConsumer.subscribe({ topic: 'user.new.DLT', fromBeginning: true })
 
   await producer.connect()
 
-  await consumer.run({
+  await newUserConsumer.run({
     eachMessage: async ({ message }) => {
       const userJSON = message.value.toString()
 
@@ -41,7 +50,7 @@ const main = async() => {
       } catch (error) {
         log('ERROR', 'An error occurred', error)
 
-        producer.send({
+        await producer.send({
           topic: 'user.new.DLT',
           messages: [
             {
@@ -50,6 +59,20 @@ const main = async() => {
           ]
         })
       }
+    }
+  })
+
+  await newUserDLTConsumer.run({
+    eachMessage: async ({ message }) => {
+      const dataJSON = message.value.toString()
+
+      if (!dataJSON) {
+        return
+      }
+
+      const data = JSON.parse(dataJSON)
+
+      log('warn', 'Some error occurred with user', data)
     }
   })
 }

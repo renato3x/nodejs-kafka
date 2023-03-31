@@ -20,7 +20,7 @@ function log(context, ...message) {
   const color = chalk[type.color]
   const date = new Date()
 
-  console.log(`${color(`[${type.prefix}]`)}`, `${chalk.green(`[${date.toLocaleTimeString()}]`)}`, ...message)
+  console.log(`${color(`[${type.prefix}]`)}`, `${chalk.green(`[${date.toLocaleTimeString({  })}]`)}`, ...message)
 }
 
 module.exports = { log }
